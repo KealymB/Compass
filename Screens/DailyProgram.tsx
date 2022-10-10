@@ -6,27 +6,52 @@ import {
   RefreshControl,
   ScrollView,
 } from "react-native";
-import { fetchTimes, Venue, TimeSlot, Place } from "../Utils/API";
+import Toast from "react-native-toast-message";
+import { Venue, TimeSlot, Place } from "../Types/FetchRequests";
+import { fetchPlaces, fetchTimes } from "../Utils/API";
 import Error from "../Components/Error";
 import Card from "../Components/Card";
 import theme from "../Utils/theme";
+import { useStore } from "../Stores/EventStore";
+import DatePicker from "../Components/DatePicker";
+import dayjs from "dayjs";
+import FilterBar from "../Components/Filters";
+import { AnimatePresence } from "moti";
 
 interface DailyProgramProps {}
 
 const DailyProgram = (props: DailyProgramProps) => {
   const [loading, setLoading] = useState(true);
-  const [times, setTimes] = useState<TimeSlot[]>([]);
+  const [dateTime, setDateTime] = useState(new Date(2018, 8, 20));
+  const [schedule, setSchedule] = useState([]);
+  const places = useStore((state) => state.places);
+  const timeSlots = useStore((state) => state.timeSlots);
+
+  const showError = () => {
+    Toast.show({
+      type: "error",
+      text1: "Network Error",
+      text2: "Error fetching time slots",
+    });
+  };
+
+  useEffect(() => {
+    setSchedule(
+      timeSlots.filter((slot) => {
+        return dayjs(slot.start).isSame(dateTime, "day");
+      })
+    );
+  }, [timeSlots, dateTime]);
 
   const fetchData = async () => {
     //fetch time slot data from API endpoint
     setLoading(true);
-
     try {
-      const times = await fetchTimes();
-
-      if (times) setTimes(times);
+      await fetchTimes();
+      await fetchPlaces();
     } catch (error) {
       console.error(error);
+      showError();
     } finally {
       setLoading(false);
     }
@@ -39,6 +64,8 @@ const DailyProgram = (props: DailyProgramProps) => {
 
   return (
     <View style={styles.container}>
+      <DatePicker setDateTime={setDateTime} dateTime={dateTime} />
+      <FilterBar />
       <ScrollView
         style={{ width: "100%", padding: 10 }}
         refreshControl={
@@ -49,7 +76,7 @@ const DailyProgram = (props: DailyProgramProps) => {
           />
         }
       >
-        {times.map((time) => {
+        {schedule.map((time) => {
           return (
             <Card
               key={time._id}
@@ -61,7 +88,8 @@ const DailyProgram = (props: DailyProgramProps) => {
             />
           );
         })}
-        {times?.length == 0 && (
+
+        {schedule?.length == 0 && (
           <Error type="Empty" title="No time slots found" />
         )}
       </ScrollView>

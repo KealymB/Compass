@@ -1,10 +1,12 @@
 import * as React from "react";
 import { Text, View, StyleSheet } from "react-native";
 import dayjs from "dayjs";
+import { MotiView, AnimatePresence } from "moti";
 
-import { Venue } from "../Utils/API";
+import { Venue } from "../Types/FetchRequests";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import theme from "../Utils/theme";
+import { useStore } from "../Stores/EventStore";
 
 interface CardProps {
   startTime: string;
@@ -15,6 +17,8 @@ interface CardProps {
 }
 
 const Card = (props: CardProps) => {
+  const places = useStore((state) => state.places);
+
   dayjs.locale("");
   return (
     <View style={styles.container}>

@@ -16,7 +16,7 @@ const Error = (props: ErrorProps) => {
         source={images[types.findIndex((item) => props.type == item)]}
         style={styles.image}
       />
-      <Text>{props.title}</Text>
+      <Text style={styles.errorText}>{props.title}</Text>
     </View>
   );
 };
@@ -24,6 +24,15 @@ const Error = (props: ErrorProps) => {
 export default Error;
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  image: { width: "100%", resizeMode: "contain" },
+  container: { justifyContent: "center", alignItems: "center" },
+  image: {
+    width: "100%",
+    height: 200,
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  errorText: {
+    fontSize: 28,
+    paddingTop: 8,
+  },
 });
