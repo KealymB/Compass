@@ -1,17 +1,21 @@
 const baseURL = "https://github.com/KealymB/CompassData";
+const placesURL =
+  "https://raw.githubusercontent.com/KealymB/CompassData/main/places.json";
+const timesURL =
+  "https://raw.githubusercontent.com/KealymB/CompassData/main/timeslots.json";
 
-type Place = {
+export type Place = {
   _id: string;
   name: string;
   configuratorType: string;
 };
 
-type Venue = {
+export type Venue = {
   _id: string;
   ordering: number;
 };
 
-type TimeSlot = {
+export type TimeSlot = {
   _id: string;
   start: string;
   name: string;
@@ -20,11 +24,22 @@ type TimeSlot = {
   parent: string;
 };
 
-const fetchData = (endPoint: string) => {
+export const fetchTimes = () => {
   //returns JSON data from URL
-  fetch(baseURL + endPoint)
-    .then((response) => response.json())
-    .then((data) => console.log(data));
+  return fetch(timesURL).then((response) => {
+    return response.json().then((data) => {
+      return data;
+    });
+  });
 };
 
-export default fetchData;
+export const fetchPlaces = (id: string) => {
+  //returns JSON data from URL
+  return fetch(placesURL).then((response) => {
+    return response.json().then((data) => {
+      return data;
+    });
+  });
+};
+
+export default { fetchTimes, fetchPlaces };
