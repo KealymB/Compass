@@ -31,14 +31,14 @@ jobs:
 
       - name: Find npm cache
         id: npm-cache-path
-        run: echo "::set-output name=dir::$(npm cache dir)"
+        run: echo "::set-output name=dir::$(npm cache verify)"
 
       - name: Restore cache
         uses: actions/cache@v2
         with:
-          path: ${{ steps.npm-cache-path.outputs.dir }}
-          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: ${{ runner.os }}-npm-
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
 
       - name: Install dependencies
         run: npm install --immutable
