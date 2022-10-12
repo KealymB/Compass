@@ -7,6 +7,7 @@ import Toast from "react-native-toast-message";
 
 import DailyProgram from "./Screens/DailyProgram";
 import CurrentProgram from "./Screens/CurrentProgram";
+import TabBar from "./Components/Navigation/TabBar";
 
 const Tab = createBottomTabNavigator();
 
@@ -14,7 +15,7 @@ export default function App() {
   return (
     <>
       <NavigationContainer>
-        <Tab.Navigator>
+        <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
           <Tab.Screen name="Program" component={DailyProgram} />
           <Tab.Screen name="Now" component={CurrentProgram} />
         </Tab.Navigator>

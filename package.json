@@ -22,7 +22,6 @@
     "react": "18.0.0",
     "react-native": "0.69.6",
     "react-native-animated-pagination-dots": "^0.1.73",
-    "react-native-dropdown-picker": "^5.4.2",
     "react-native-modal-datetime-picker": "^14.0.0",
     "react-native-pager-view": "5.4.24",
     "react-native-reanimated": "~2.9.1",
