@@ -18,15 +18,13 @@ interface DailyProgramProps {}
 const DailyProgram = (props: DailyProgramProps) => {
   const [loading, setLoading] = useState(true);
   const [dateTime, setDateTime] = useState(new Date(2018, 8, 18));
+
   const [schedule, setSchedule] = useState<TimeSlot[]>([]);
-  const [headerType, setHeaderType] = useState<"DROPDOWN" | "FILTER">(
-    "DROPDOWN"
-  );
-  const [options, setOptions] = useState<TimeSlot[]>([]);
-  const [selectedSession, setSession] = useState<TimeSlot>();
-  const [events, setEvents] = useState<TimeSlot[]>([]);
+  const [sessions, setSessions] = useState<TimeSlot[]>([]);
+  const [currentSession, setSession] = useState<TimeSlot>();
   const [filters, setFilters] = useState<Place[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<Place[]>([]);
+
   const places = useStore((state) => state.places);
   const timeSlots = useStore((state) => state.timeSlots);
 
@@ -56,8 +54,7 @@ const DailyProgram = (props: DailyProgramProps) => {
         return new Date(a.start).getTime() - new Date(b.start).getTime();
       });
 
-    setOptions(sessions);
-    updateEvents(sessions[0]);
+    setSessions(sessions);
     setSession(sessions[0]);
   }, [timeSlots, places, dateTime]);
 
@@ -111,19 +108,6 @@ const DailyProgram = (props: DailyProgramProps) => {
     }
   };
 
-  const updateEvents = (session: TimeSlot) => {
-    const events = timeSlots
-      .filter((slot) => {
-        //filters all matching children
-        return slot.parent === session._id;
-      })
-      .sort((a, b) => {
-        //sort sessions reverse date
-        return new Date(a.start).getTime() - new Date(b.start).getTime();
-      });
-    setEvents(events);
-  };
-
   const handleFilter = (filter: Place) => {
     // adds filter to selected filter state if unique, removes if not unique
     if (
@@ -140,11 +124,6 @@ const DailyProgram = (props: DailyProgramProps) => {
     }
   };
 
-  const setSelectedSession = (session: TimeSlot) => {
-    updateEvents(session);
-    setSession(session);
-  };
-
   return (
     <View style={styles.container}>
       <DatePicker setDateTime={setDateTime} dateTime={dateTime} />
@@ -155,11 +134,13 @@ const DailyProgram = (props: DailyProgramProps) => {
       )}
       {places?.length > 0 && schedule?.length > 0 && (
         <ProgramViewer
-          selected={headerType}
-          options={options}
-          title={selectedSession.name}
-          events={events}
+          events={schedule}
           selectedDate={dateTime}
+          currentSession={currentSession}
+          sessions={sessions}
+          onSessionChange={(session) => {
+            setSession(session);
+          }}
         />
       )}
 
