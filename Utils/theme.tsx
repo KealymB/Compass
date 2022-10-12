@@ -1,7 +1,7 @@
 const colors = {
   primary: "#3DBB8F",
-  secondary: "#262626",
-  tertiary: "#040406",
+  secondary: "#baf5e0",
+  tertiary: "#999",
 };
 
 const basePadding = 8;

@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import Toast from "react-native-toast-message";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 
 import theme from "../Utils/theme";
 
@@ -16,18 +19,53 @@ type DatePickerProps = {
   setDateTime: (date) => void;
 };
 
+const DAYOFFSET = 18;
+const DATEMAX = new Date(2018, 8, 20);
+const DATEMIN = new Date(2018, 8, 18);
+
 const DatePicker = (props: DatePickerProps) => {
-  const [day, setDay] = useState(20);
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+  const days = ["TUES", "WED", "THUR"];
+  const [day, setDay] = useState(0);
   const [pickerShowing, setVisibility] = useState(false);
 
+  const showError = () => {
+    Toast.show({
+      type: "info",
+      text1: "Date selection",
+      text2: "Dates must be between 2018-08-18 and 2018-08-20",
+    });
+  };
+
   const incrementDay = () => {
-    setDay(day + 1);
-    props.setDateTime(new Date(2018, 8, day + 1));
+    // incremments selected day, wraping if over 3
+    const newDay = day >= days.length - 1 ? 0 : day + 1;
+    setDay(newDay);
+    props.setDateTime(new Date(2018, 8, DAYOFFSET + newDay));
   };
 
   const decrementDay = () => {
-    setDay(day - 1);
-    props.setDateTime(new Date(2018, 8, day - 1));
+    // decrements selected day, wraping if under 0
+    const newDay = day <= 0 ? days.length - 1 : day - 1;
+    setDay(newDay);
+    props.setDateTime(new Date(2018, 8, DAYOFFSET + newDay));
+  };
+
+  const confirmDay = (date) => {
+    // clamps dates selected between DATEMAX and DATEMIN
+    // displays info toast if out of bounds
+    let newDate = date;
+    if (dayjs(date).isAfter(DATEMAX)) {
+      showError();
+      newDate = DATEMAX;
+    }
+    if (dayjs(date).isBefore(DATEMIN)) {
+      showError();
+      newDate = DATEMIN;
+    }
+    props.setDateTime(newDate);
+    setVisibility(false);
   };
 
   const Chevron = (props: chevronProps) => {
@@ -52,7 +90,7 @@ const DatePicker = (props: DatePickerProps) => {
           style={styles.datePicker}
         >
           <Text style={styles.dateText}>
-            {dayjs(props.dateTime).format("DD-MM-YYYY")}
+            {dayjs(props.dateTime).format("ddd D MMMM")}
           </Text>
         </TouchableOpacity>
         <Chevron type="forward" onPress={incrementDay} />
@@ -60,10 +98,7 @@ const DatePicker = (props: DatePickerProps) => {
       <DateTimePickerModal
         isVisible={pickerShowing}
         mode="date"
-        onConfirm={(date) => {
-          props.setDateTime(date);
-          setVisibility(false);
-        }}
+        onConfirm={confirmDay}
         date={props.dateTime}
         onCancel={() => setVisibility(false)}
       />

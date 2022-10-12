@@ -1,5 +1,6 @@
-import * as React from "react";
+import React, { useRef } from "react";
 import { Text, View, StyleSheet, Image } from "react-native";
+import LottieView from "lottie-react-native";
 
 interface ErrorProps {
   type: "Empty";
@@ -7,14 +8,17 @@ interface ErrorProps {
 }
 
 const Error = (props: ErrorProps) => {
+  const animation = useRef(null);
   const types = ["Empty"];
-  const images = [require("../assets/information/Not_found.png")];
+  const anims = [require("../assets/lottie/not-found.json")];
 
   return (
     <View style={styles.container}>
-      <Image
-        source={images[types.findIndex((item) => props.type == item)]}
-        style={styles.image}
+      <LottieView
+        autoPlay
+        ref={animation}
+        style={styles.anim}
+        source={anims[types.findIndex((item) => props.type == item)]}
       />
       <Text style={styles.errorText}>{props.title}</Text>
     </View>
@@ -24,8 +28,8 @@ const Error = (props: ErrorProps) => {
 export default Error;
 
 const styles = StyleSheet.create({
-  container: { justifyContent: "center", alignItems: "center" },
-  image: {
+  container: { justifyContent: "center", alignItems: "center", flex: 1 },
+  anim: {
     width: "100%",
     height: 200,
     borderRadius: 10,
