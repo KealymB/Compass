@@ -37,7 +37,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
         };
 
         return (
-          <>
+          <View key={label + index} style={{ flex: 1 }}>
             <TouchableOpacity
               accessibilityRole="button"
               accessibilityState={isFocused ? { selected: true } : {}}
@@ -70,7 +70,7 @@ const TabBar = ({ state, descriptors, navigation }) => {
                 }}
               />
             )}
-          </>
+          </View>
         );
       })}
     </View>
@@ -85,9 +85,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     padding: theme.basePadding,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.lightgray,
   },
   buttonStyle: {
-    flex: 1,
+    height: 100,
     alignItems: "center",
   },
 });

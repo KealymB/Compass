@@ -1,19 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Toast from "react-native-toast-message";
 import dayjs from "dayjs";
 
-import { useStore } from "../Stores/EventStore";
-import { Place, TimeSlot } from "../Types/FetchRequests";
 import DatePicker from "../Components/DatePicker";
 import Error from "../Components/Error";
+import ProgramViewer from "../Components/DailyProgram/ProgramViewer";
+import FilterModal from "../Components/DailyProgram/FilterModel";
+import FilterButton from "../Components/DailyProgram/FilterButton";
+
+import { useStore } from "../Stores/EventStore";
+import { Place, TimeSlot } from "../Types/FetchRequests";
 import { fetchPlaces, fetchTimes } from "../Utils/API";
 import theme from "../Utils/theme";
-import Header from "../Components/DailyProgram/Header";
-import ProgramViewer from "../Components/DailyProgram/ProgramViewer";
-import FilterBar from "../Components/FilterBar";
+import FilteredResults from "../Components/DailyProgram/FilteredResults";
 
-interface DailyProgramProps {}
+interface DailyProgramProps {
+  navigation: NativeStackScreenProps<any, any>;
+}
 
 const DailyProgram = (props: DailyProgramProps) => {
   const [loading, setLoading] = useState(true);
@@ -22,6 +32,7 @@ const DailyProgram = (props: DailyProgramProps) => {
   const [schedule, setSchedule] = useState<TimeSlot[]>([]);
   const [sessions, setSessions] = useState<TimeSlot[]>([]);
   const [currentSession, setSession] = useState<TimeSlot>();
+  const [isModelOpen, setModal] = useState(false);
   const [filters, setFilters] = useState<Place[]>([]);
   const [selectedFilters, setSelectedFilters] = useState<Place[]>([]);
 
@@ -73,15 +84,20 @@ const DailyProgram = (props: DailyProgramProps) => {
 
   useEffect(() => {
     // Updates available filters for the selected day
-    let newFilters = [];
+    let newFilters: Place[] = [];
     if (schedule.length > 0 && places.length > 0) {
       schedule.map((scheduleItem) => {
         if (scheduleItem?.locations.length > 0) {
           const place = places.find((placeItem) => {
+            // look for places that are in the schedule
             return placeItem._id == scheduleItem.locations[0]._id;
           });
-          // add Place to filter list, if daily schedule contains that Place
-          newFilters.push(place);
+          // add Place to filter list, if daily schedule contains that Place and place name isn't duplicated
+          if (
+            !newFilters.some((filterItem) => filterItem.name === place.name)
+          ) {
+            newFilters.push(place);
+          }
         }
       });
     }
@@ -92,7 +108,21 @@ const DailyProgram = (props: DailyProgramProps) => {
   useEffect(() => {
     // Fetch time slots on component mount
     fetchData();
+    // set header
+    setHeader();
   }, []);
+
+  const setHeader = () => {
+    props.navigation.setOptions({
+      headerRight: () => (
+        <FilterButton
+          onPress={() => {
+            setModal(true);
+          }}
+        />
+      ),
+    });
+  };
 
   const fetchData = async () => {
     //fetch time slot data from API endpoint
@@ -132,20 +162,43 @@ const DailyProgram = (props: DailyProgramProps) => {
           <ActivityIndicator size="large" color={theme.colors.primary} />
         </View>
       )}
-      {places?.length > 0 && schedule?.length > 0 && (
-        <ProgramViewer
+      {selectedFilters.length == 0 &&
+        places?.length > 0 &&
+        schedule?.length > 0 && (
+          <ProgramViewer
+            events={schedule}
+            selectedDate={dateTime}
+            currentSession={currentSession}
+            sessions={sessions}
+            onSessionChange={(session) => {
+              setSession(session);
+            }}
+          />
+        )}
+
+      {selectedFilters.length != 0 && (
+        <FilteredResults
           events={schedule}
           selectedDate={dateTime}
-          currentSession={currentSession}
-          sessions={sessions}
-          onSessionChange={(session) => {
-            setSession(session);
-          }}
+          selectedFilters={selectedFilters}
+          places={places}
         />
       )}
 
       {!loading && schedule?.length == 0 && (
         <Error type="Empty" title="No time slots found" />
+      )}
+
+      {filters.length > 0 && (
+        <FilterModal
+          filters={filters}
+          setSelectedFilters={handleFilter}
+          modelOpen={isModelOpen}
+          setModal={(flag) => {
+            setModal(flag);
+          }}
+          selectedFilters={selectedFilters}
+        />
       )}
     </View>
   );
@@ -156,4 +209,8 @@ export default DailyProgram;
 const styles = StyleSheet.create({
   container: { flex: 1 },
   loader: { flex: 1, justifyContent: "center" },
+  button: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
 });

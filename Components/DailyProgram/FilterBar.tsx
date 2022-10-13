@@ -6,8 +6,10 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { Place } from "../Types/FetchRequests";
-import theme from "../Utils/theme";
+import { Ionicons } from "@expo/vector-icons";
+
+import { Place } from "../../Types/FetchRequests";
+import theme from "../../Utils/theme";
 
 interface FilterBarProps {
   filters: Place[];
@@ -32,6 +34,10 @@ const FilterBar = (props: FilterBarProps) => {
           ]}
         >
           <Text>{props.filter.name}</Text>
+          {!props.selected && <View style={{ width: 16 }} />}
+          {props.selected && (
+            <Ionicons name={`checkmark`} size={16} color="black" />
+          )}
         </View>
       </TouchableOpacity>
     );
@@ -40,7 +46,7 @@ const FilterBar = (props: FilterBarProps) => {
   const isSelected = (filter: Place) => {
     return (
       props.selectedFilters.findIndex((item) => {
-        return item._id == filter._id;
+        return item.name == filter.name;
       }) != -1
     );
   };
@@ -66,19 +72,32 @@ const FilterBar = (props: FilterBarProps) => {
 export default FilterBar;
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
   filterContainer: {
     padding: theme.basePadding,
     height: 40,
     justifyContent: "center",
     margin: theme.basePadding,
-    borderRadius: theme.basePadding,
-    borderColor: theme.colors.primary,
+    borderRadius: 20,
+    borderColor: theme.colors.darksecondary,
     borderWidth: 1,
     backgroundColor: theme.colors.secondary,
+    flexDirection: "row",
+    alignItems: "center",
   },
   filterSelected: {
-    borderColor: theme.colors.secondary,
     backgroundColor: theme.colors.primary,
+    borderColor: theme.colors.primary,
+    borderWidth: 1,
   },
 });

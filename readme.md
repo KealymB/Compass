@@ -11,6 +11,7 @@ connect to metro bundler using Expo Go app
 ## Known Issues
 
 - Session pagination doesn't reset to 0 when a day is changed.
+- Filters re-render on press, resetting scroll
 
 ## Technologies used
 

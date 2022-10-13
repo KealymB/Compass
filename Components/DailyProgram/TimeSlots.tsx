@@ -132,7 +132,7 @@ const TimeSlots = (props: TimeSlotsProps) => {
                     return place._id === event?.locations[0]._id;
                   })
                 ].name
-              : "unkown";
+              : "unknown";
 
           return (
             <Slot key={event._id}>
