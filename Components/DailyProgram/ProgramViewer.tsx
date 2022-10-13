@@ -6,7 +6,7 @@ import PagerView, {
 import { ExpandingDot } from "react-native-animated-pagination-dots";
 
 import { Place, TimeSlot } from "../../Types/FetchRequests";
-import TimeSlots from "../TimeSlots";
+import TimeSlots from "./TimeSlots";
 import theme from "../../Utils/theme";
 
 interface ProgramViewerProps {

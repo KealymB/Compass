@@ -23,3 +23,4 @@ connect to metro bundler using Expo Go app
 
 Designed the UI in Figma.
 JSON data hosted in a Github repo to simulate API calls.
+Implemented GitHub action to automatically push update to Expo Go Client

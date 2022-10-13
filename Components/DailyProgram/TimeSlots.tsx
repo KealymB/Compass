@@ -5,9 +5,9 @@ import * as React from "react";
 import { Text, View, StyleSheet, ScrollView } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import { TimeSlot } from "../Types/FetchRequests";
-import theme from "../Utils/theme";
-import { useStore } from "../Stores/EventStore";
+import { TimeSlot } from "../../Types/FetchRequests";
+import theme from "../../Utils/theme";
+import { useStore } from "../../Stores/EventStore";
 
 type timeSlot = {};
 
@@ -122,6 +122,7 @@ const TimeSlots = (props: TimeSlotsProps) => {
             dayjs(props.selectedDate)
               .hour(dayjs().hour())
               .minute(dayjs().minute())
+              .tz("America/Toronto")
           );
 
           const placeName =
