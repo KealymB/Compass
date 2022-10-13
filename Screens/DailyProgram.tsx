@@ -67,6 +67,7 @@ const DailyProgram = (props: DailyProgramProps) => {
 
     setSessions(sessions);
     setSession(sessions[0]);
+    setSelectedFilters([]);
   }, [timeSlots, places, dateTime]);
 
   useEffect(() => {
@@ -156,7 +157,14 @@ const DailyProgram = (props: DailyProgramProps) => {
 
   return (
     <View style={styles.container}>
-      <DatePicker setDateTime={setDateTime} dateTime={dateTime} />
+      <DatePicker
+        setDateTime={(date) => {
+          setDateTime(date);
+          setSelectedFilters([]);
+          setModal(false);
+        }}
+        dateTime={dateTime}
+      />
       {loading && (
         <View style={styles.loader}>
           <ActivityIndicator size="large" color={theme.colors.primary} />
