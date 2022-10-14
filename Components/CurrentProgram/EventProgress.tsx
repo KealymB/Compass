@@ -22,23 +22,23 @@ const EventProgress = (props: EventProgressProps) => {
 
   const findClosestSession = () => {
     //returns progress between 0 and 1
-    let closest = dayjs("2080-10-20").tz("America/Toronto");
+    let closest = 99999999999;
     let closestSession: TimeSlot;
+
     for (let i = 0; i < props.sessions.length; i++) {
       const session = props.sessions[i];
       //look for session with the closest end time
+
       const convertedDay = dayjs(session.end).tz("America/Toronto");
-      console.log(convertedDay.format("HH:mm"));
-      console.log(props.currTime);
-      console.log(
-        Math.abs(props.currTime.diff(dayjs(session.end).tz("America/Toronto")))
-      );
-      if (
-        Math.abs(
-          props.currTime.diff(dayjs(session.end).tz("America/Toronto"))
-        ) < Math.abs(props.currTime.diff(closest))
-      ) {
-        closest = dayjs(session.end).tz("America/Toronto");
+
+      const sessionMS = convertedDay.hour() * 3600 + convertedDay.minute() * 60;
+      const currDayMS =
+        props.currTime.hour() * 3600 + props.currTime.minute() * 60;
+
+      const diff = Math.abs(sessionMS - currDayMS);
+
+      if (diff < closest) {
+        closest = diff;
         closestSession = session;
       }
     }
@@ -53,8 +53,6 @@ const EventProgress = (props: EventProgressProps) => {
     );
 
     const position = sessionIndex * windowWidth;
-    console.log("scroll width: ", windowWidth * props.sessions.length);
-    console.log(position);
     return position;
   };
 

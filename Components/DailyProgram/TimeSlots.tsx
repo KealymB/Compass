@@ -120,9 +120,8 @@ const TimeSlots = (props: TimeSlotsProps) => {
         {props.schedule.map((event) => {
           const eventOccured = dayjs(event.end).isBefore(
             dayjs(props.selectedDate)
-              .hour(dayjs().hour())
+              .hour(dayjs().hour() - 5)
               .minute(dayjs().minute())
-              .tz("America/Toronto")
           );
 
           const placeName =

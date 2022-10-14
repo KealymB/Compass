@@ -63,10 +63,8 @@ const CurrentProgram = (props: CurrentProgramProps) => {
     });
 
     const currentTime = dayjs(new Date(2018, 8, 18))
-      .hour(dayjs().hour())
-      .minute(dayjs().minute())
-      .tz("America/Toronto");
-    console.log(currentTime);
+      .hour(dayjs().hour() - 5)
+      .minute(dayjs().minute());
 
     setCurrTime(currentTime);
     setEvents(sortedEvents);
