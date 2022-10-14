@@ -28,21 +28,32 @@ type SessionCardProps = {
 };
 
 const SessionCard = (props: SessionCardProps) => {
-  const [imageURI, setImage] = useState<string>();
   dayjs.extend(utc);
   dayjs.extend(timezone);
 
+  const [imageURI, setImage] = useState<string>();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
   const fetchImage = async (locationName: string) => {
+    setLoading(true);
     try {
       const query = locationName + " event";
       const url = `https://api.unsplash.com/search/photos?client_id=${Env.ACCESS_KEY}&query=${query}&orientation=landscape`;
       const res: SplashFetch = await fetch(url).then((response) => {
         return response.json();
       });
-      setImage(res.results[Math.floor(Math.random() * 10)].urls.small);
+      if (res?.results) {
+        setImage(res.results[Math.floor(Math.random() * 10)].urls.small);
+      } else {
+        setError(true);
+        showError();
+      }
     } catch (error) {
       console.error(error);
       showError();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,7 +87,20 @@ const SessionCard = (props: SessionCardProps) => {
   return (
     <View style={styles.container}>
       <View style={[styles.sessionContainer, styles.card]}>
-        {imageURI ? (
+        {loading && <ImageLoader />}
+        {error && (
+          <Image
+            style={{
+              width: CARD_WIDTH - padding,
+              height: 200,
+              overflow: "hidden",
+              borderRadius: 10,
+              marginBottom: theme.basePadding,
+            }}
+            source={require("../../assets/placeHolder.png")}
+          />
+        )}
+        {imageURI && (
           <Image
             style={{
               width: CARD_WIDTH - padding,
@@ -87,8 +111,6 @@ const SessionCard = (props: SessionCardProps) => {
             }}
             source={{ uri: imageURI }}
           />
-        ) : (
-          <ImageLoader />
         )}
         <View
           style={{
