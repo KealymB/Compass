@@ -41,7 +41,7 @@ const TimeSlots = (props: TimeSlotsProps) => {
         >
           <Ionicons
             name="time-outline"
-            size={16}
+            size={12}
             color={theme.colors.tertiary}
           />
           <Text
@@ -66,7 +66,7 @@ const TimeSlots = (props: TimeSlotsProps) => {
           >
             {props.title}
           </Text>
-          <View style={{ flexDirection: "row" }}>
+          <View style={{ flexDirection: "row", paddingTop: 5 }}>
             <Ionicons name="location-outline" size={16} color={"black"} />
             <Text
               style={{
@@ -159,6 +159,7 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 4,
+    justifyContent: "center",
     backgroundColor: "white",
     borderRadius: 20,
     borderTopLeftRadius: 0,

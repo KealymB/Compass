@@ -40,7 +40,7 @@ const DailyProgram = (props: DailyProgramProps) => {
   const timeSlots = useStore((state) => state.timeSlots);
 
   const showError = () => {
-    // displays new work error toast
+    // displays network error toast
     Toast.show({
       type: "error",
       text1: "Network Error",
@@ -86,6 +86,7 @@ const DailyProgram = (props: DailyProgramProps) => {
   useEffect(() => {
     // Updates available filters for the selected day
     let newFilters: Place[] = [];
+
     if (schedule.length > 0 && places.length > 0) {
       schedule.map((scheduleItem) => {
         if (scheduleItem?.locations.length > 0) {

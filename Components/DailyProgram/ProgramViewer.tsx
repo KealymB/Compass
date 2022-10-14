@@ -94,10 +94,9 @@ const ProgramViewer = (props: ProgramViewerProps) => {
         {Array(props.sessions.length)
           .fill(0)
           .map((_, i) => {
-            const schedule = props.events.filter((event) => {
-              return event.parent == props.sessions[i]._id;
-            });
-
+            const schedule = props.events.filter(
+              (event) => event.parent == props.sessions[i]._id
+            );
             return (
               <TimeSlots
                 schedule={schedule}
