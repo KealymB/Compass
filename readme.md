@@ -16,7 +16,7 @@ On the "Program" screen, users have the ability to select a date (Tuesday, Wedne
 
 The "Now" screen lists all events on the selected day, automatically scrolling to the first event that is occurring now. All events that are occurring now are highlighted.
 
-### Images
+### Mockup
 
 ![Alt text](ScreenShots/Mockup.png?raw=true "Mockup")
 
