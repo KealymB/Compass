@@ -2,12 +2,13 @@ import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
 import * as React from "react";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { TimeSlot } from "../../Types/FetchRequests";
 import theme from "../../Utils/theme";
 import { useStore } from "../../Stores/EventStore";
+import SessionCard from "./SessionCard";
 
 type timeSlot = {};
 
@@ -21,67 +22,6 @@ const TimeSlots = (props: TimeSlotsProps) => {
   dayjs.extend(timezone);
 
   const places = useStore((state) => state.places);
-
-  type CardProps = {
-    startTime: Date;
-    endTime: Date;
-    title: string;
-    placeName: string;
-  };
-
-  const Card = (props: CardProps) => {
-    return (
-      <View style={styles.card}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginBottom: 5,
-          }}
-        >
-          <Ionicons
-            name="time-outline"
-            size={12}
-            color={theme.colors.tertiary}
-          />
-          <Text
-            style={{
-              fontSize: 12,
-              color: theme.colors.tertiary,
-              paddingLeft: 5,
-            }}
-          >
-            {dayjs(props.startTime).tz("America/Toronto").format("ddd, HH:mm") +
-              " - " +
-              dayjs(props.endTime).tz("America/Toronto").format("HH:mm")}
-          </Text>
-        </View>
-        <View>
-          <Text
-            style={{
-              fontSize: 16,
-              color: "black",
-            }}
-            numberOfLines={1}
-          >
-            {props.title}
-          </Text>
-          <View style={{ flexDirection: "row", paddingTop: 5 }}>
-            <Ionicons name="location-outline" size={16} color={"black"} />
-            <Text
-              style={{
-                fontSize: 16,
-                color: "black",
-                paddingLeft: 5,
-              }}
-            >
-              {props.placeName}
-            </Text>
-          </View>
-        </View>
-      </View>
-    );
-  };
 
   type SlotProps = {
     children: React.ReactNode;
@@ -136,7 +76,7 @@ const TimeSlots = (props: TimeSlotsProps) => {
           return (
             <Slot key={event._id}>
               <Timeline passed={eventOccured} />
-              <Card
+              <SessionCard
                 startTime={new Date(event.start)}
                 endTime={new Date(event.end)}
                 title={event.name}
@@ -155,25 +95,6 @@ export default TimeSlots;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  card: {
-    flex: 4,
-    justifyContent: "center",
-    backgroundColor: "white",
-    borderRadius: 20,
-    borderTopLeftRadius: 0,
-    padding: theme.basePadding * 2,
-    margin: theme.basePadding * 2,
-
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.32,
-    shadowRadius: 5.46,
-
-    elevation: 9,
   },
   slot: {
     width: "100%",

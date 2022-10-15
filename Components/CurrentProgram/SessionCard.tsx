@@ -18,7 +18,7 @@ import Toast from "react-native-toast-message";
 import { Env } from "../../Utils/Env";
 
 const windowWidth = Dimensions.get("window").width;
-const CARD_HEIGHT = 300;
+const CARD_HEIGHT = 350;
 const padding = theme.basePadding * 4;
 const CARD_WIDTH = windowWidth / 1.5 - padding;
 
@@ -36,7 +36,20 @@ const SessionCard = (props: SessionCardProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  const isHappening = props.happeningNow(props.session);
+
+  const place = props.places.find((place) => {
+    if (props.session?.locations.length == 0) return false;
+
+    return props.session.locations[0]._id == place._id;
+  });
+
+  useEffect(() => {
+    fetchImage(props.session.name);
+  }, []);
+
   const fetchImage = async (locationName: string) => {
+    // fetches related images (based on location name) to be shown in session card
     setLoading(true);
     try {
       const query = locationName + " event";
@@ -58,16 +71,6 @@ const SessionCard = (props: SessionCardProps) => {
     }
   };
 
-  const place = props.places.find((place) => {
-    if (props.session?.locations.length == 0) return false;
-
-    return props.session.locations[0]._id == place._id;
-  });
-
-  useEffect(() => {
-    fetchImage(props.session.name);
-  }, []);
-
   const showError = () => {
     // displays network error toast
     Toast.show({
@@ -85,22 +88,10 @@ const SessionCard = (props: SessionCardProps) => {
     );
   };
 
-  return (
-    <View style={styles.container}>
-      <View
-        style={[
-          styles.card,
-          props.happeningNow(props.session) ? styles.highlighted : {},
-        ]}
-      >
-        {loading && <ImageLoader />}
-        {error && (
-          <Image
-            style={styles.image}
-            source={require("../../assets/placeHolder.png")}
-          />
-        )}
-        {imageURI && <Image style={styles.image} source={{ uri: imageURI }} />}
+  const Description = () => {
+    // renders session time, name and location
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <View
           style={{
             flexDirection: "row",
@@ -153,6 +144,27 @@ const SessionCard = (props: SessionCardProps) => {
           </View>
         </View>
       </View>
+    );
+  };
+
+  return (
+    <View
+      style={[
+        styles.container,
+        isHappening ? { height: CARD_HEIGHT + 50, width: CARD_WIDTH + 50 } : {},
+      ]}
+    >
+      <View style={[styles.card, isHappening ? styles.highlighted : {}]}>
+        {loading && <ImageLoader />}
+        {error && (
+          <Image
+            style={styles.image}
+            source={require("../../assets/placeHolder.png")}
+          />
+        )}
+        {imageURI && <Image style={styles.image} source={{ uri: imageURI }} />}
+        <Description />
+      </View>
     </View>
   );
 };
@@ -167,6 +179,7 @@ const styles = StyleSheet.create({
     padding: theme.basePadding,
   },
   card: {
+    flex: 1,
     backgroundColor: "white",
     borderRadius: 20,
     padding: theme.basePadding * 2,
