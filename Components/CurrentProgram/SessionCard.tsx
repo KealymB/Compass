@@ -72,7 +72,7 @@ const SessionCard = (props: SessionCardProps) => {
     Toast.show({
       type: "error",
       text1: "Network Error",
-      text2: "Error fetching images",
+      text2: "key = " + process.env.ACCESS_KEY,
     });
   };
 

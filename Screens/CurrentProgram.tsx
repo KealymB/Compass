@@ -24,16 +24,6 @@ const CurrentProgram = (props: CurrentProgramProps) => {
   const [dateTime, setDateTime] = useState(dayjs(new Date(2018, 8, 18)));
   const [events, setEvents] = useState<TimeSlot[]>([]);
   const [currTime, setCurrTime] = useState<dayjs.Dayjs>();
-  const [progress, setProgress] = useState(0.0);
-
-  const showError = () => {
-    // displays new work error toast
-    Toast.show({
-      type: "error",
-      text1: "Network Error",
-      text2: "Error fetching time slots",
-    });
-  };
 
   useEffect(() => {
     // Updates events based on the day and slot selected
