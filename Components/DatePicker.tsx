@@ -16,12 +16,12 @@ type chevronProps = {
 
 type DatePickerProps = {
   dateTime: Date;
-  setDateTime: (date) => void;
+  setDateTime: (date: dayjs.Dayjs) => void;
 };
 
 const DAYOFFSET = 18;
-const DATEMAX = new Date(2018, 8, 20);
-const DATEMIN = new Date(2018, 8, 18);
+const DATEMAX = new Date(2018, 8, 20, dayjs().hour(), dayjs().minute());
+const DATEMIN = new Date(2018, 8, 18, dayjs().hour(), dayjs().minute());
 
 const DatePicker = (props: DatePickerProps) => {
   dayjs.extend(utc);
@@ -42,17 +42,25 @@ const DatePicker = (props: DatePickerProps) => {
     // incremments selected day, wraping if over 3
     const newDay = day >= days.length - 1 ? 0 : day + 1;
     setDay(newDay);
-    props.setDateTime(new Date(2018, 8, DAYOFFSET + newDay));
+    props.setDateTime(
+      dayjs(
+        new Date(2018, 8, DAYOFFSET + newDay, dayjs().hour(), dayjs().minute())
+      )
+    );
   };
 
   const decrementDay = () => {
     // decrements selected day, wraping if under 0
     const newDay = day <= 0 ? days.length - 1 : day - 1;
     setDay(newDay);
-    props.setDateTime(new Date(2018, 8, DAYOFFSET + newDay));
+    props.setDateTime(
+      dayjs(
+        new Date(2018, 8, DAYOFFSET + newDay, dayjs().hour(), dayjs().minute())
+      )
+    );
   };
 
-  const confirmDay = (date) => {
+  const confirmDay = (date: Date) => {
     // clamps dates selected between DATEMAX and DATEMIN
     // displays info toast if out of bounds
     let newDate = date;
@@ -64,7 +72,7 @@ const DatePicker = (props: DatePickerProps) => {
       showError();
       newDate = DATEMIN;
     }
-    props.setDateTime(newDate);
+    props.setDateTime(dayjs(newDate));
     setVisibility(false);
   };
 

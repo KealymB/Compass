@@ -86,32 +86,15 @@ const SessionCard = (props: SessionCardProps) => {
 
   return (
     <View style={styles.container}>
-      <View style={[styles.sessionContainer, styles.card]}>
+      <View style={styles.card}>
         {loading && <ImageLoader />}
         {error && (
           <Image
-            style={{
-              width: CARD_WIDTH - padding,
-              height: 200,
-              overflow: "hidden",
-              borderRadius: 10,
-              marginBottom: theme.basePadding,
-            }}
+            style={styles.image}
             source={require("../../assets/placeHolder.png")}
           />
         )}
-        {imageURI && (
-          <Image
-            style={{
-              width: CARD_WIDTH - padding,
-              height: 200,
-              overflow: "hidden",
-              borderRadius: 10,
-              marginBottom: theme.basePadding,
-            }}
-            source={{ uri: imageURI }}
-          />
-        )}
+        {imageURI && <Image style={styles.image} source={{ uri: imageURI }} />}
         <View
           style={{
             flexDirection: "row",
@@ -171,17 +154,16 @@ const SessionCard = (props: SessionCardProps) => {
 export default SessionCard;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, alignSelf: "center" },
-  sessionContainer: {
+  container: {
     height: CARD_HEIGHT,
     width: CARD_WIDTH,
     alignSelf: "center",
+    padding: theme.basePadding,
   },
   card: {
     backgroundColor: "white",
     borderRadius: 20,
     padding: theme.basePadding * 2,
-    margin: theme.basePadding * 2,
     alignItems: "center",
 
     shadowColor: "#000",
@@ -203,8 +185,7 @@ const styles = StyleSheet.create({
     width: CARD_WIDTH - padding,
     height: 200,
     overflow: "hidden",
-    borderRadius: 10,
+    borderRadius: theme.basePadding * 2,
     marginBottom: theme.basePadding,
-    justifyContent: "center",
   },
 });

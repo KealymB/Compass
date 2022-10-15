@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  ActivityIndicator,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Toast from "react-native-toast-message";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 
 import DatePicker from "../Components/DatePicker";
 import Error from "../Components/Error";
@@ -26,8 +23,13 @@ interface DailyProgramProps {
 }
 
 const DailyProgram = (props: DailyProgramProps) => {
+  dayjs.extend(utc);
+  dayjs.extend(timezone);
+
   const [loading, setLoading] = useState(true);
-  const [dateTime, setDateTime] = useState(new Date(2018, 8, 18));
+  const [dateTime, setDateTime] = useState(
+    dayjs(new Date(2018, 8, 18, dayjs().hour(), dayjs().minute()))
+  );
 
   const [schedule, setSchedule] = useState<TimeSlot[]>([]);
   const [sessions, setSessions] = useState<TimeSlot[]>([]);
@@ -115,6 +117,7 @@ const DailyProgram = (props: DailyProgramProps) => {
   }, []);
 
   const setHeader = () => {
+    // @ts-ignore
     props.navigation.setOptions({
       headerRight: () => (
         <FilterButton
@@ -164,7 +167,7 @@ const DailyProgram = (props: DailyProgramProps) => {
           setSelectedFilters([]);
           setModal(false);
         }}
-        dateTime={dateTime}
+        dateTime={dateTime.toDate()}
       />
       {loading && (
         <View style={styles.loader}>

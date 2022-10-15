@@ -9,12 +9,13 @@ import DailyProgram from "./Screens/DailyProgram";
 import CurrentProgram from "./Screens/CurrentProgram";
 import TabBar from "./Components/Navigation/TabBar";
 import FilterButton from "./Components/DailyProgram/FilterButton";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
         <Tab.Navigator tabBar={(props) => <TabBar {...props} />}>
           <Tab.Screen
@@ -28,7 +29,7 @@ export default function App() {
         </Tab.Navigator>
       </NavigationContainer>
       <Toast />
-    </>
+    </GestureHandlerRootView>
   );
 }
 
