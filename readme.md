@@ -8,7 +8,7 @@ npm install
 npx expo start
 connect to metro bundler using Expo Go app
 
-## To use
+## Description
 
 There are two screens, the program and now screen.
 
@@ -18,11 +18,7 @@ The "Now" screen lists all events on the selected day, automatically scrolling t
 
 ### Images
 
-![Alt text](ScreenShots/Program.jpeg?raw=true "Program Screen")
-
-![Alt text](ScreenShots/Now.jpeg?raw=true "Now Screen")
-
-![Alt text](ScreenShots/Filter.jpeg?raw=true "Filters Sheet")
+![Alt text](ScreenShots/Mockup.png?raw=true "Mockup")
 
 ## Known Issues
 
