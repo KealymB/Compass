@@ -18,11 +18,11 @@ The "Now" screen lists all events on the selected day, automatically scrolling t
 
 ### Images
 
-![Alt text](ScreenShots/Program.jpeg?raw=true "Program Screen")
+![Alt text](ScreenShots/Program.jpeg?raw=true "Program Screen"  =x200)
 
-![Alt text](ScreenShots/Now.jpeg?raw=true "Now Screen")
+![Alt text](ScreenShots/Now.jpeg?raw=true "Now Screen"  =x200)
 
-![Alt text](ScreenShots/Filter.jpeg?raw=true "Filters Sheet")
+![Alt text](ScreenShots/Filter.jpeg?raw=true "Filters Sheet"  =x200)
 
 ## Known Issues
 
