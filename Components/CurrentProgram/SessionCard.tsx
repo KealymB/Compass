@@ -112,10 +112,10 @@ const SessionCard = (props: SessionCardProps) => {
             }}
           >
             {dayjs(props.session.start)
-              .tz("America/Toronto")
+              .tz("America/Chicago")
               .format("ddd, HH:mm") +
               " - " +
-              dayjs(props.session.end).tz("America/Toronto").format("HH:mm")}
+              dayjs(props.session.end).tz("America/Chicago").format("HH:mm")}
           </Text>
         </View>
         <View>

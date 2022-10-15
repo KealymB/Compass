@@ -33,8 +33,8 @@ const EventProgress = (props: EventProgressProps) => {
       //look for session with the closest end time
       const session = props.sessions[i];
 
-      const convertedDay = dayjs(session.end).tz("America/Toronto"); //convert session to UTC-5:00
-      const currTime = dayjs(props.currTime).tz("America/Toronto"); //converts current time to UTC-5:00
+      const convertedDay = dayjs(session.end).tz("America/Chicago"); //convert session to UTC-5:00
+      const currTime = dayjs(props.currTime).tz("America/Chicago"); //converts current time to UTC-5:00
 
       const sessionSeconds =
         convertedDay.hour() * 3600 + convertedDay.minute() * 60;
@@ -58,14 +58,14 @@ const EventProgress = (props: EventProgressProps) => {
   const isHappeningNow = (session: TimeSlot) => {
     if (
       props.currTime
-        .tz("America/Toronto")
-        .isBefore(dayjs(session.start).tz("America/Toronto"))
+        .tz("America/Chicago")
+        .isBefore(dayjs(session.start).tz("America/Chicago"))
     )
       return false;
     if (
       props.currTime
-        .tz("America/Toronto")
-        .isAfter(dayjs(session.end).tz("America/Toronto"))
+        .tz("America/Chicago")
+        .isAfter(dayjs(session.end).tz("America/Chicago"))
     )
       return false;
     return true;
