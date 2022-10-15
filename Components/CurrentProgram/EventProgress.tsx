@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from "react";
-import { Text, View, StyleSheet, ScrollView, Dimensions } from "react-native";
+import React, { useCallback, useEffect, useRef } from "react";
+import { Text, View, StyleSheet, FlatList, Dimensions } from "react-native";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
@@ -24,7 +24,7 @@ const EventProgress = (props: EventProgressProps) => {
   const CARD_WIDTH = windowWidth / 1.5 - padding;
   const posOffset = CARD_WIDTH / 3;
 
-  const findClosestSession = () => {
+  const closestSessionIndex = () => {
     //returns progress between 0 and 1
     let closest = 99999999999;
     let closestSession: TimeSlot;
@@ -48,54 +48,50 @@ const EventProgress = (props: EventProgressProps) => {
       }
     }
 
-    console.log("session:", closestSession.name);
-
-    return closestSession;
-  };
-
-  const calculatePosition = () => {
-    //returns position in pixels of where the session is
-    const closestSession = findClosestSession();
     const sessionIndex = props.sessions.findIndex(
       (session) => session._id == closestSession._id
     );
 
-    const position = sessionIndex * CARD_WIDTH;
-    console.log("Pos:", position);
-    return position;
+    return sessionIndex;
   };
 
-  useEffect(() => {
-    if (scrollRef?.current) {
-      scrollRef.current.scrollTo({
-        x: calculatePosition(),
-        y: 0,
-        animated: true,
-      });
-    }
-  }, [scrollRef?.current, props.currTime]);
+  const isHappeningNow = (session: TimeSlot) => {
+    if (
+      props.currTime
+        .tz("America/Toronto")
+        .isBefore(dayjs(session.start).tz("America/Toronto"))
+    )
+      return false;
+    if (
+      props.currTime
+        .tz("America/Toronto")
+        .isAfter(dayjs(session.end).tz("America/Toronto"))
+    )
+      return false;
+    return true;
+  };
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        ref={scrollRef}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        snapToInterval={CARD_WIDTH}
-        snapToEnd={false}
+      <FlatList
+        initialScrollIndex={closestSessionIndex()}
+        data={props.sessions}
         contentContainerStyle={{
           marginLeft: posOffset,
           paddingRight: windowWidth / 2,
         }}
-      >
-        {props.sessions.map((session) => (
-          <SessionCard
-            session={session}
-            places={props.places}
-            key={session._id}
-          />
-        ))}
-      </ScrollView>
+        renderItem={({ item }) => {
+          return (
+            <SessionCard
+              session={item}
+              places={props.places}
+              key={item._id}
+              happeningNow={isHappeningNow}
+            />
+          );
+        }}
+        horizontal
+      />
     </View>
   );
 };

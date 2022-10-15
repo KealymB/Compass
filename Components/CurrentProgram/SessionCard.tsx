@@ -25,6 +25,7 @@ const CARD_WIDTH = windowWidth / 1.5 - padding;
 type SessionCardProps = {
   session: TimeSlot;
   places: Place[];
+  happeningNow: (session: TimeSlot) => boolean;
 };
 
 const SessionCard = (props: SessionCardProps) => {
@@ -86,7 +87,12 @@ const SessionCard = (props: SessionCardProps) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
+      <View
+        style={[
+          styles.card,
+          props.happeningNow(props.session) ? styles.highlighted : {},
+        ]}
+      >
         {loading && <ImageLoader />}
         {error && (
           <Image
@@ -175,6 +181,20 @@ const styles = StyleSheet.create({
     shadowRadius: 5.46,
 
     elevation: 9,
+  },
+  highlighted: {
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+
+    shadowColor: theme.colors.primary,
+    shadowOffset: {
+      width: 2,
+      height: 6,
+    },
+    shadowOpacity: 0.5,
+    shadowRadius: 6.2,
+
+    elevation: 12,
   },
   slot: {
     width: "100%",

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";
