@@ -1,16 +1,9 @@
 import dayjs from "dayjs";
 import * as React from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Platform,
-} from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import theme from "../../Utils/theme";
-import Toast from "react-native-toast-message";
 
 type CardProps = {
   startTime: Date;
@@ -20,14 +13,6 @@ type CardProps = {
 };
 
 const SessionCard = (props: CardProps) => {
-  const showError = () => {
-    Toast.show({
-      type: "error",
-      text1: "Error saving event",
-      text2: "Calender permissions denied",
-    });
-  };
-
   return (
     <View style={styles.card}>
       <View

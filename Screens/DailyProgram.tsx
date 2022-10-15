@@ -59,7 +59,7 @@ const DailyProgram = (props: DailyProgramProps) => {
 
     const sessions = timeSlots
       .filter((slot) => {
-        //filters all matching children
+        // filters timeslots where they have a parent that matches the dayID
         return slot.parent === day._id;
       })
       .sort((a, b) => {
@@ -73,7 +73,7 @@ const DailyProgram = (props: DailyProgramProps) => {
   }, [timeSlots, places, dateTime]);
 
   useEffect(() => {
-    // sort time slots available on that day
+    // filter and sort time slots available on that day
     const unsortedSchedule = timeSlots.filter((slot) => {
       return dayjs(slot.start).isSame(dateTime, "day");
     });
